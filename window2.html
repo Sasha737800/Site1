@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mission Hub</title>
+<style>
+    body {
+        background-color: black;
+        color: #00ff00;
+        font-family: monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .box {
+        text-align: center;
+        border: 2px solid #00ff00;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px #00ff00;
+        width: 300px;
+    }
+    button {
+        background-color: black;
+        color: #00ff00;
+        border: 1px solid #00ff00;
+        padding: 8px;
+        margin: 5px;
+        cursor: pointer;
+        font-family: monospace;
+    }
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h2>WELCOME SASHA737800</h2>
+    <button onclick="window.location.href='workout-date.html'">@workout</button>
+    <button onclick="window.location.href='logs.html'">Workout logs</button>
+</div>
+
+<script>
+    const clickSound = new Audio('videos/click.mp3');
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', () => {
+            const soundClone = clickSound.cloneNode();
+            soundClone.play();
+        });
+    });
+</script>
+
+</body>
+</html>

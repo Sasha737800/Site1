@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Log Workout Date</title>
+<style>
+  body {
+    background-color: black;
+    color: #00ff00;
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+  }
+  form {
+    border: 2px solid #00ff00;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px #00ff00;
+  }
+  input {
+    background-color: black;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 8px;
+    margin: 5px;
+    font-family: monospace;
+    cursor: text;
+  }
+  input[type="submit"] {
+    cursor: pointer;
+  }
+  #message {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  /* Go Back button style */
+  #goBackBtn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: black;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-family: monospace;
+    border-radius: 4px;
+    box-shadow: 0 0 8px #00ff00;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+  #goBackBtn:hover {
+    background-color: #00ff00;
+    color: black;
+  }
+</style>
+</head>
+<body>
+
+<button id="goBackBtn">&larr; Go Back</button>
+
+<form id="logForm">
+  <label for="dateInput">Date:</label><br />
+  <input type="date" id="dateInput" required /><br />
+  <label for="weightInput">Weight:</label><br />
+  <input type="number" step="0.1" min="0" id="weightInput" required placeholder="Enter your weight" /><br />
+  <input type="submit" value="Log Workout" />
+</form>
+
+<div id="message"></div>
+
+<script>
+  const logForm = document.getElementById('logForm');
+  const dateInput = document.getElementById('dateInput');
+  const weightInput = document.getElementById('weightInput');
+  const message = document.getElementById('message');
+  const goBackBtn = document.getElementById('goBackBtn');
+
+  // Set today's date as default for date input
+  function setTodayDate() {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
+  }
+
+  // Load logs from localStorage or empty array if none
+  function getLogs() {
+    const logs = localStorage.getItem('workoutLogs');
+    return logs ? JSON.parse(logs) : [];
+  }
+
+  // Save logs to localStorage
+  function saveLogs(logs) {
+    localStorage.setItem('workoutLogs', JSON.stringify(logs));
+  }
+
+  logForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const date = dateInput.value;
+    const weight = parseFloat(weightInput.value).toFixed(1);
+
+    if (!date) {
+      message.textContent = 'Please enter a valid date.';
+      message.style.color = 'red';
+      return;
+    }
+    if (weight <= 0 || isNaN(weight)) {
+      message.textContent = 'Please enter a valid weight.';
+      message.style.color = 'red';
+      return;
+    }
+
+    let logs = getLogs();
+
+    // Check if date already logged
+    if (logs.some(log => log.date === date)) {
+      message.textContent = 'This date has already been logged.';
+      message.style.color = 'red';
+      return;
+    }
+
+    // Add new log
+    logs.push({ date, weight });
+    saveLogs(logs);
+
+    message.textContent = `Logged weight ${weight} on ${date}. Redirecting to workout...`;
+    message.style.color = '#00ff00';
+
+    // Redirect after short delay
+    setTimeout(() => {
+      window.location.href = "workout.html"; // Change if your workout page filename is different
+    }, 1500);
+  });
+
+  goBackBtn.addEventListener('click', () => {
+    window.history.back();
+  });
+
+  window.onload = () => {
+    setTodayDate();
+  };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spy Login</title>
+<style>
+    body {
+        background-color: black;
+        color: #00ff00;
+        font-family: monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .login-box {
+        text-align: center;
+        border: 2px solid #00ff00;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px #00ff00;
+    }
+    input {
+        background-color: black;
+        color: #00ff00;
+        border: 1px solid #00ff00;
+        padding: 8px;
+        margin: 5px;
+        font-family: monospace;
+    }
+    input[type="submit"] {
+        cursor: pointer;
+    }
+    .message {
+        margin-top: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>ACCESS TERMINAL</h2>
+    <form id="loginForm" autocomplete="off">
+        <input type="text" id="username" placeholder="Username" autocomplete="off"><br>
+        <input type="password" id="password" placeholder="Password" autocomplete="off"><br>
+        <input type="submit" value="ENTER">
+    </form>
+    <div class="message" id="message"></div>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const user = document.getElementById("username").value.trim();
+        const pass = document.getElementById("password").value.trim();
+        const message = document.getElementById("message");
+
+        if (user === "Sasha737800" && pass === "Boeing737800") {
+            message.textContent = "ACCESS GRANTED...";
+            message.style.color = "#00ff00";
+            setTimeout(() => {
+                window.location.href = "window2.html";
+            }, 1000);
+        } else {
+            message.textContent = "ACCESS DENIED. WRONG NAME OR PASSWORD.";
+            message.style.color = "red";
+        }
+    });
+
+    // Play click sound only when buttons or submit inputs are clicked
+    const clickSound = new Audio('videos/click.mp3');
+    document.querySelectorAll('button, input[type="submit"]').forEach(button => {
+      button.addEventListener('click', () => {
+        const soundClone = clickSound.cloneNode();
+        soundClone.play();
+      });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Workout Video</title>
+<style>
+  body {
+    background-color: black;
+    color: #00ff00;
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+  }
+  video {
+    width: 80%;
+    max-width: 600px;
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    box-shadow: 0 0 20px #00ff00;
+    pointer-events: none;
+    margin-bottom: 20px;
+  }
+  .buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  button {
+    background-color: black;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 8px 16px;
+    font-family: monospace;
+    cursor: pointer;
+    border-radius: 4px;
+    user-select: none;
+    font-weight: normal;
+    box-shadow: none;
+    transition: none;
+  }
+  button:disabled {
+    color: #004d00;
+    border-color: #004d00;
+    cursor: not-allowed;
+  }
+  button.active {
+    /* match normal button style */
+  }
+  .volume-control {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  label {
+    font-size: 14px;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 200px;
+    height: 6px;
+    background: #00ff00;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: black;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid #00ff00;
+    margin-top: -6px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: black;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid #00ff00;
+  }
+  /* Go Back button styling (like your login page submit) */
+  #goBackBtn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: black;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: monospace;
+    border-radius: 4px;
+    box-shadow: 0 0 20px #00ff00;
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #goBackBtn:hover {
+    background-color: #00ff00;
+    color: black;
+  }
+</style>
+</head>
+<body>
+
+<button id="goBackBtn">&larr; Go Back</button>
+
+<video id="workoutVideo" src="videos/video1.mp4" muted loop></video>
+
+<div class="buttons">
+  <button id="startBtn">Start</button>
+  <button id="resumeBtn" disabled>Resume</button>
+  <button id="stopBtn" disabled>Stop</button>
+</div>
+
+<div class="volume-control">
+  <label for="volumeSlider">Volume:</label>
+  <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0" />
+  <button id="slowMoBtn">Slow Motion</button>
+</div>
+
+<audio id="beepSound" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA="></audio>
+
+<script>
+  const video = document.getElementById('workoutVideo');
+  const startBtn = document.getElementById('startBtn');
+  const resumeBtn = document.getElementById('resumeBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const beep = document.getElementById('beepSound');
+  const volumeSlider = document.getElementById('volumeSlider');
+  const goBackBtn = document.getElementById('goBackBtn');
+  const slowMoBtn = document.getElementById('slowMoBtn');
+  let slowMoActive = false;
+
+  function playBeep() {
+    beep.currentTime = 0;
+    beep.play();
+  }
+
+  startBtn.addEventListener('click', () => {
+    playBeep();
+    video.muted = false; // unmute on user action
+    video.currentTime = 0;
+    video.play();
+    startBtn.disabled = true;
+    resumeBtn.disabled = true;
+    stopBtn.disabled = false;
+  });
+
+  resumeBtn.addEventListener('click', () => {
+    playBeep();
+    video.muted = false; // unmute on user action
+    video.play();
+    resumeBtn.disabled = true;
+    stopBtn.disabled = false;
+    startBtn.disabled = true;
+  });
+
+  stopBtn.addEventListener('click', () => {
+    playBeep();
+    video.pause();
+    stopBtn.disabled = true;
+    resumeBtn.disabled = false;
+    startBtn.disabled = false;
+  });
+
+  volumeSlider.addEventListener('input', () => {
+    video.muted = false;
+    video.volume = volumeSlider.value;
+  });
+
+  slowMoBtn.addEventListener('click', () => {
+    slowMoActive = !slowMoActive;
+    if (slowMoActive) {
+      video.playbackRate = 0.5;
+      slowMoBtn.style.backgroundColor = 'black';
+      slowMoBtn.style.color = '#00ff00';
+      slowMoBtn.style.border = '1px solid #00ff00';
+    } else {
+      video.playbackRate = 1;
+      slowMoBtn.style.backgroundColor = 'black';
+      slowMoBtn.style.color = '#00ff00';
+      slowMoBtn.style.border = '1px solid #00ff00';
+    }
+  });
+
+  goBackBtn.addEventListener('click', () => {
+    window.history.back();
+  });
+
+  window.onload = () => {
+    startBtn.disabled = false;
+    resumeBtn.disabled = true;
+    stopBtn.disabled = true;
+    video.volume = 0;
+    volumeSlider.value = 0;
+    video.muted = true;
+  };
+</script>
+
+</body>
+</html>

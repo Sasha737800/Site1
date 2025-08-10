@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Workout Logs</title>
+<style>
+    body {
+        background-color: black;
+        color: #00ff00;
+        font-family: monospace;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        position: relative;
+    }
+    .back-btn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: black;
+        color: #00ff00;
+        border: 1px solid #00ff00;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-family: monospace;
+        border-radius: 4px;
+        box-shadow: 0 0 20px #00ff00;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+    }
+    .back-btn:hover {
+        background-color: #00ff00;
+        color: black;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    button {
+        background-color: black;
+        color: #00ff00;
+        border: 1px solid #00ff00;
+        padding: 8px;
+        margin-top: 15px;
+        cursor: pointer;
+        font-family: monospace;
+    }
+</style>
+</head>
+<body>
+
+<button class="back-btn" onclick="window.history.back()">← Go Back</button>
+
+<div>
+    <h2>WORKOUT LOGS</h2>
+    <ul id="logList"></ul>
+    <button id="clearBtn">DELETE ALL LOGS</button>
+</div>
+
+<script>
+    const logList = document.getElementById("logList");
+    const logs = JSON.parse(localStorage.getItem("workoutLogs")) || [];
+
+    if (logs.length === 0) {
+        logList.innerHTML = "<li>No workout logs yet.</li>";
+    } else {
+        logs.forEach(entry => {
+            const li = document.createElement("li");
+            li.textContent = `Weight: ${entry.weight} kg on Date: ${entry.date}`;
+            logList.appendChild(li);
+        });
+    }
+
+    document.getElementById("clearBtn").addEventListener("click", function() {
+        if (confirm("Are you sure you want to delete all workout logs?")) {
+            localStorage.removeItem("workoutLogs");
+            location.reload();
+        }
+    });
+</script>
+
+</body>
+</html>
